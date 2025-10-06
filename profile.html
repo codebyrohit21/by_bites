@@ -123,10 +123,27 @@
             border: 1px solid var(--border-color);
         }
 
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .header-title h2 {
             margin: 0;
             font-size: 24px;
             font-weight: 600;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
         }
 
         .header-actions {
@@ -393,6 +410,10 @@
                 margin-left: 0;
             }
 
+            .menu-toggle {
+                display: block;
+            }
+
             .profile-section {
                 grid-template-columns: 1fr;
             }
@@ -400,6 +421,25 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            .header-title h2 {
+                font-size: 20px;
+            }
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
         }
 
         .withdraw-form {
@@ -431,6 +471,9 @@
     </style>
 </head>
 <body data-theme="dark">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-logo">
@@ -478,6 +521,9 @@
         <!-- Header -->
         <div class="header">
             <div class="header-title">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <h2 id="pageTitle">Dashboard</h2>
             </div>
             <div class="header-actions">
@@ -771,8 +817,21 @@
                 e.preventDefault();
                 const page = link.getAttribute('data-page');
                 showPage(page);
+                
+                // Close sidebar on mobile after clicking
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
             });
         });
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
 
         // Copy wallet address
         function copyAddress() {
