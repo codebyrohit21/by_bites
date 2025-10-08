@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoEarn - Login & Register</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0B0E11;
+            --bg-secondary: #1E2329;
+            --bg-card: #2B3139;
+            --text-primary: #EAECEF;
+            --text-secondary: #B7BDC6;
+            --accent-gold: #F0B90B;
+            --accent-green: #0ECB81;
+            --accent-red: #F6465D;
+            --border-color: #2B3139;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #1E2329;
+            --text-secondary: #707A8A;
+            --border-color: #EAECEF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(240, 185, 11, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(14, 203, 129, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-coins {
+            position: absolute;
+            font-size: 30px;
+            color: var(--accent-gold);
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .coin1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .coin2 { top: 20%; right: 15%; animation-delay: 1s; }
+        .coin3 { bottom: 15%; left: 20%; animation-delay: 2s; }
+        .coin4 { bottom: 20%; right: 10%; animation-delay: 3s; }
+
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 20px;
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .auth-left {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #FCD535 100%);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .auth-left::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .auth-logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .auth-left h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-left p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-list {
+            margin-top: 30px;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .auth-right {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .theme-toggle-auth {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .theme-toggle-auth:hover {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .auth-header {
+            margin-bottom: 40px;
+        }
+
+        .auth-header h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-group-custom {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(240, 185, 11, 0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .social-btn {
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-secondary);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .auth-footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .form-content {
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 992px) {
+            .auth-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-left {
+                display: none;
+            }
+
+            .auth-right {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .auth-right {
+                padding: 30px 20px;
+            }
+
+            .auth-header h3 {
+                font-size: 24px;
+            }
+
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+    <i class="fas fa-coins floating-coins coin1"></i>
+    <i class="fas fa-coins floating-coins coin2"></i>
+    <i class="fas fa-coins floating-coins coin3"></i>
+    <i class="fas fa-coins floating-coins coin4"></i>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle-auth" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-grid">
+                <!-- Left Side -->
+                <div class="auth-left">
+                    <div class="auth-logo">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h2>CryptoEarn</h2>
+                    <p>Start earning daily crypto rewards with our innovative platform. Join thousands of users already making money!</p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <span>100% Secure & Safe</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <span>Instant Withdrawals</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <span>Daily Profit Plans</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span>Referral Bonuses</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="auth-right">
+                    <!-- Auth Tabs -->
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                        <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginForm" class="form-content active">
+                        <div class="auth-header">
+                            <h3>Welcome Back!</h3>
+                            <p>Login to continue your earning journey</p>
+                        </div>
+
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" class="form-input" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required>
+                                    <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPassword')"></i>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-group" style="justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="rememberMe">
+                                    <label for="rememberMe">Remember me</label>
+                                </div>
+                                <a href="#" class="forgot-password">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-sign-in-alt"></i> Login Now
+                            </button>
+                        </form>
+
+                        <div class="divider">OR</div>
+
+                        <div class="social-login">
+                            <button class="social-btn">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                            <button class="social-btn">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </button>
+                        </div>
+
+                        <div class="auth-footer">
+                            Don't have an account? <a href="#" onclick="switchTab('register')">Register Now</a>
+                        </div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerForm" class="form-content">
+                        <div class="auth-header">
+                            <h3>Create Account</h3>
+                            <p>Join us and start earning today!</p>
+                        </div>
+
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" class="form-input" placeholder="Enter your full name" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" class="form-input" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-phone input-icon"></i>
+                                    <input type="tel" class="form-input" placeholder="+91 98765 43210" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" class="form-input" id="registerPassword" placeholder="Create a strong password" required>
+                                    <i class="fas fa-eye password-toggle" onclick="togglePassword('registerPassword')"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter your password" required>
+                                    <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Referral Code (Optional)</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-gift input-icon"></i>
+                                    <input type="text" class="form-input" placeholder="Enter referral code">
+                                </div>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <label for="agreeTerms">I agree to the <a href="#" style="color: var(--accent-gold);">Terms & Conditions</a></label>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </form>
+
+                        <div class="divider">OR</div>
+
+                        <div class="social-login">
+                            <button class="social-btn">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                            <button class="social-btn">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </button>
+                        </div>
+
+                        <div class="auth-footer">
+                            Already have an account? <a href="#" onclick="switchTab('login')">Login Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+
+        // Switch between Login and Register
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabBtns[0].classList.add('active');
+            } else {
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+                tabBtns[1].classList.add('active');
+            }
+        }
+
+        // Toggle Password Visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Form submission (you can add your logic here)
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Form submitted! Add your backend integration here.');
+            });
+        });
+    </script>
+</body>
+</html>
